@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import createHttpError from 'http-errors';
 import jwt from 'jsonwebtoken';
-import { jwtSecrets } from '../config';
+import { secret_token } from '../config';
 
 const checkAuthentication = (req: Request, res: Response, next: NextFunction) => {
 	const { authorization } = req.headers;
@@ -19,7 +19,7 @@ const checkAuthentication = (req: Request, res: Response, next: NextFunction) =>
 
 	const token = split[1];
 
-	jwt.verify(token, jwtSecrets.token_secret, (err, decoded) => {
+	jwt.verify(token, secret_token, (err, decoded: any) => {
 		if (err) {
 			console.error('jwt error', err);
 			return next(createHttpError(401, 'Unathorized'));

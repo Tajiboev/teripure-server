@@ -32,4 +32,8 @@ const clientSchema = Joi.object({
 	address: Joi.string().required()
 });
 
-export { loginSchema, productSchema, orderSchema, clientSchema, signupSchema };
+const subscribeSchema = Joi.object({
+	email: Joi.string().email().lowercase().required()
+});
+
+export { loginSchema, productSchema, orderSchema, clientSchema, signupSchema, subscribeSchema };
