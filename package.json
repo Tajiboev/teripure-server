@@ -34,7 +34,9 @@
 		"joi": "^17.4.0",
 		"jsonwebtoken": "^8.5.1",
 		"mongoose": "^5.11.18",
+		"nodemon": "^2.0.19",
 		"pino": "^6.13.0",
-		"pino-pretty": "^5.1.2"
+		"pino-pretty": "^5.1.2",
+		"slugify": "^1.6.5"
 	}
 }

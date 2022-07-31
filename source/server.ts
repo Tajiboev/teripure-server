@@ -20,7 +20,6 @@ async function shutdown() {
 		await mongoose.disconnect();
 		await mongoose.connection.close();
 	} catch (error) {
-		log.error(error);
 		process.exit(1);
 	}
 }

@@ -1,29 +1,35 @@
 import Joi from 'joi';
 
-const signupSchema = Joi.object({
-	firstName: Joi.string().alphanum().min(2).max(30).required(),
-	lastName: Joi.string().alphanum().min(2).max(30).required(),
-	password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{8,24}$')).required(),
-	email: Joi.string().email().lowercase().required()
-});
-
 const loginSchema = Joi.object({
 	email: Joi.string().email().lowercase().required(),
 	password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{8,24}$')).required()
 });
 
-const projectSchema = Joi.object({
-	title: Joi.string().required(),
-	description: Joi.string().required(),
-	budget: Joi.string().required(),
-	deadline: Joi.date().required()
+const signupSchema = Joi.object({
+	email: Joi.string().email().lowercase().required(),
+	firstName: Joi.string().required(),
+	lastName: Joi.string().required(),
+	password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{8,24}$')).required()
 });
 
-const projectUpdateSchema = Joi.object({
-	title: Joi.string(),
-	description: Joi.string(),
-	budget: Joi.string(),
-	deadline: Joi.date()
+const productSchema = Joi.object({
+	price: Joi.number().required(),
+	name: Joi.string().required(),
+	description: Joi.string().required()
 });
 
-export { signupSchema, loginSchema, projectSchema, projectUpdateSchema };
+const orderSchema = Joi.object({
+	product: Joi.string().required(),
+	name: Joi.string().required(),
+	phoneNumber: Joi.string().required(),
+	address: Joi.string().required(),
+	quantity: Joi.number().required()
+});
+
+const clientSchema = Joi.object({
+	name: Joi.string().required(),
+	phoneNumber: Joi.string().required(),
+	address: Joi.string().required()
+});
+
+export { loginSchema, productSchema, orderSchema, clientSchema, signupSchema };

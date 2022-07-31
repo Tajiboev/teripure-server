@@ -4,7 +4,8 @@ const config = dotenv.config();
 if (config.error || !config.parsed) throw config.error;
 const env = config.parsed;
 
-const dbUrl = `mongodb+srv://${env.MONGO_USERNAME}:${env.MONGO_PASSWORD}@cluster0.9oliw.mongodb.net/${env.MONGO_DBNAME}?retryWrites=true&w=majority`;
+const dbUrl = `mongodb+srv://${env.MONGO_USERNAME}:${env.MONGO_PASSWORD}@cluster0.kszv0zh.mongodb.net/?retryWrites=true&w=majority`;
 const port = env.PORT;
+const secret_token = env.SECRET_TOKEN;
 
-export { dbUrl, port };
+export { dbUrl, port, secret_token };
