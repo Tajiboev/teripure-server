@@ -5,7 +5,7 @@
 	"main": "build/server.js",
 	"scripts": {
 		"start": "nodemon build/server.js",
-		"build": "rimraf ./build && tsc"
+		"build": "prettier --write source/ && tsc"
 	},
 	"engines": {
 		"node": "18.5.0"
