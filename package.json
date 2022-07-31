@@ -41,6 +41,7 @@
 		"pino": "^6.13.0",
 		"pino-pretty": "^5.1.2",
 		"prettier": "^2.7.1",
-		"slugify": "^1.6.5"
+		"slugify": "^1.6.5",
+		"ts-node": "^10.9.1"
 	}
 }
