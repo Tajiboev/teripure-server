@@ -5,7 +5,7 @@
 	"main": "build/server.js",
 	"scripts": {
 		"start": "nodemon source/server.ts",
-		"build": "prettier --write source/ && tsc"
+		"build": "rimraf ./build && tsc"
 	},
 	"engines": {
 		"node": "18.5.0"
@@ -40,6 +40,7 @@
 		"nodemon": "^2.0.19",
 		"pino": "^6.13.0",
 		"pino-pretty": "^5.1.2",
+		"prettier": "^2.7.1",
 		"slugify": "^1.6.5"
 	}
 }
