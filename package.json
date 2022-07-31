@@ -7,6 +7,9 @@
 		"start": "nodemon source/server.ts",
 		"build": "prettier --write source/ && tsc"
 	},
+	"engines": {
+		"node": "18.5.0"
+	},
 	"author": "Mukhammdjon.tajiboev@gmail.com",
 	"license": "MIT",
 	"private": true,
