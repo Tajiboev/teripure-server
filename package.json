@@ -4,7 +4,7 @@
 	"description": "Auth handler",
 	"main": "build/server.js",
 	"scripts": {
-		"start": "nodemon build/server.ts",
+		"start": "nodemon build/server.js",
 		"build": "rimraf ./build && tsc"
 	},
 	"engines": {
