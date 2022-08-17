@@ -10,6 +10,8 @@ import productRouter from './routers/productRouter';
 import orderRouter from './routers/orderRouter';
 import authRouter from './routers/authRouter';
 import subscribeRouter from './routers/subscribeRouter';
+import reviewRouter from './routers/reviewRouter';
+import messageRouter from './routers/messageRouter';
 
 const app = express();
 
@@ -25,6 +27,8 @@ app.use('/products', productRouter);
 app.use('/orders', orderRouter);
 app.use('/auth', authRouter);
 app.use('/subscribe', subscribeRouter);
+app.use('/reviews', reviewRouter);
+app.use('/messages', messageRouter);
 
 // healthcheck
 app.get('/healthcheck', async (req, res) => {

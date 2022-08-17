@@ -2,7 +2,7 @@ import { Document } from 'mongoose';
 
 export interface IReview {
 	author: string;
-	review: string;
+	text: string;
 	rating: number;
 }
 

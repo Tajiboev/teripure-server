@@ -1,5 +1,4 @@
-import { Schema, HookNextFunction } from 'mongoose';
-import { IOrderDocument } from '../interfaces/order';
+import { Schema } from 'mongoose';
 
 const orderSchema: Schema = new Schema(
 	{
@@ -7,7 +6,7 @@ const orderSchema: Schema = new Schema(
 		name: { type: String, required: true },
 		phoneNumber: { type: String, required: true },
 		address: { type: String, required: true },
-		quantity: { type: Number, required: true, default: 1 },
+		quantity: { type: Number, required: true },
 		orderId: { type: String, required: true }
 	},
 	{ strictQuery: true, timestamps: true }

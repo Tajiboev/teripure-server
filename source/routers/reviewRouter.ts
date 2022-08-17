@@ -1,16 +1,16 @@
 import express from 'express';
-import { createSubscriber, listSubscribers } from '../controllers/subscribtions';
+import { createReview, listReviews } from '../controllers/reviews';
 
 const router = express.Router();
 
 import validateBody from '../middleware/validateBody';
 import methodError from '../utils/methodError';
-import { subscribeSchema } from '../utils/validationSchemas';
+import { reviewSchema } from '../utils/validationSchemas';
 
 router
 	.route('/')
-	.post(validateBody(subscribeSchema), createSubscriber)
-	.get(listSubscribers)
+	.post(validateBody(reviewSchema), createReview)
+	.get(listReviews)
 	.all(methodError({ allowed: ['POST', 'GET'] }));
 
 export default router;

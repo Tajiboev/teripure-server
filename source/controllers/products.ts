@@ -21,7 +21,7 @@ const createProduct = (req: Request, res: Response, next: NextFunction) => {
 const listProducts = (req: Request, res: Response, next: NextFunction) => {
 	Product.find()
 		.then((products) => {
-			res.status(200).json({ data: products });
+			res.status(200).json(products);
 		})
 		.catch(next);
 };

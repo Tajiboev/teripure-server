@@ -36,4 +36,25 @@ const subscribeSchema = Joi.object({
 	email: Joi.string().email().lowercase().required()
 });
 
-export { loginSchema, productSchema, orderSchema, clientSchema, signupSchema, subscribeSchema };
+const reviewSchema = Joi.object({
+	author: Joi.string().required(),
+	phoneNumber: Joi.string().required(),
+	text: Joi.string().required()
+});
+
+const messageSchema = Joi.object({
+	name: Joi.string().required(),
+	phoneNumber: Joi.string().required(),
+	text: Joi.string().required()
+});
+
+export {
+	loginSchema,
+	productSchema,
+	orderSchema,
+	clientSchema,
+	signupSchema,
+	subscribeSchema,
+	reviewSchema,
+	messageSchema
+};
