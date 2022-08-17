@@ -39,7 +39,8 @@ const subscribeSchema = Joi.object({
 const reviewSchema = Joi.object({
 	author: Joi.string().required(),
 	phoneNumber: Joi.string().required(),
-	text: Joi.string().required()
+	text: Joi.string().required(),
+	rating: Joi.number().max(5).min(1).required()
 });
 
 const messageSchema = Joi.object({

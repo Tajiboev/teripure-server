@@ -11,9 +11,9 @@ const listReviews = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const createReview = async (req: Request, res: Response, next: NextFunction) => {
-	const { author, phoneNumber, text } = req.body;
+	const { author, phoneNumber, text, rating } = req.body;
 
-	Review.create({ author, phoneNumber, text })
+	Review.create({ author, phoneNumber, text, rating })
 		.then((review) => {
 			res.status(201).json(review);
 		})
