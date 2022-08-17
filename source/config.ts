@@ -4,6 +4,6 @@ const SECRET_TOKEN = process.env.SECRET_TOKEN;
 
 const dbUrl = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@cluster0.kszv0zh.mongodb.net/?retryWrites=true&w=majority`;
 const port = process.env.PORT || 3000;
-const secret_token = SECRET_TOKEN || 'ultrasafe secter';
+const secret_token = SECRET_TOKEN || 'ultrasafe secret';
 
 export { dbUrl, port, secret_token };
