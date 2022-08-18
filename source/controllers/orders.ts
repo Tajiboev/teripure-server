@@ -12,10 +12,10 @@ const listOrders = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const createOrder = async (req: Request, res: Response, next: NextFunction) => {
-	const { name, phoneNumber, address, product } = req.body;
+	const { name, phoneNumber, address, quantity, product } = req.body;
 	const orderId = crypto.randomBytes(6).toString('hex').substring(0, 6).toUpperCase();
 
-	Order.create({ name, phoneNumber, address, product, orderId })
+	Order.create({ name, phoneNumber, address, quantity, product, orderId })
 		.then((order) => {
 			res.status(201).json(order);
 		})
