@@ -4,6 +4,7 @@
 	"description": "Auth handler",
 	"main": "build/server.js",
 	"scripts": {
+		"dev": "nodemon source/server.ts",
 		"start": "nodemon build/server.js",
 		"build": "prettier --write source/ && tsc"
 	},

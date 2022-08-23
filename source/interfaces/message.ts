@@ -1,12 +1,7 @@
 import { Document } from 'mongoose';
 
-export interface IMessage {
+export interface IMessage extends Document {
 	name: string;
 	phoneNumber: string;
 	text: string;
-}
-
-export interface IMessageDocument extends IMessage, Document {
-	createdAt: Date;
-	updatedAt: Date;
 }

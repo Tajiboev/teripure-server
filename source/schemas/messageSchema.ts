@@ -1,6 +1,7 @@
 import { Schema } from 'mongoose';
+import { IMessage } from '../interfaces/message';
 
-const messageSchema: Schema = new Schema(
+const messageSchema = new Schema<IMessage>(
 	{
 		name: {
 			type: String,

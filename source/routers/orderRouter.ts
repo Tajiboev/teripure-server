@@ -1,5 +1,5 @@
 import express from 'express';
-import { createOrder, listOrders, orderInfo } from '../controllers/orders';
+import { createOrder, listOrders, orderInfo, updateOrder, deleteOrder } from '../controllers/orders';
 
 const router = express.Router();
 
@@ -16,6 +16,8 @@ router
 router
 	.route('/:orderId')
 	.get(orderInfo)
-	.all(methodError({ allowed: ['GET'] }));
+	.patch(updateOrder)
+	.delete(deleteOrder)
+	.all(methodError({ allowed: ['GET', 'PATCH', 'DELETE'] }));
 
 export default router;

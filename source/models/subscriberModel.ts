@@ -1,5 +1,5 @@
 import { model } from 'mongoose';
-import { ISubscriberDocument } from '../interfaces/subscriber';
+import { ISubscriber } from '../interfaces/subscriber';
 import subscribeSchema from '../schemas/subscribeSchema';
 
-export default model<ISubscriberDocument>('Subscriber', subscribeSchema);
+export default model<ISubscriber>('Subscriber', subscribeSchema);

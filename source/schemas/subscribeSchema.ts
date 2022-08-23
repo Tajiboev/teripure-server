@@ -1,6 +1,7 @@
 import { Schema } from 'mongoose';
+import { ISubscriber } from '../interfaces/subscriber';
 
-const subscribeSchema: Schema = new Schema(
+const subscribeSchema = new Schema<ISubscriber>(
 	{
 		email: {
 			type: String,

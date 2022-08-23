@@ -20,15 +20,17 @@ const productSchema = Joi.object({
 
 const orderSchema = Joi.object({
 	product: Joi.string().required(),
-	name: Joi.string().required(),
-	phoneNumber: Joi.string().required(),
-	address: Joi.string().required(),
+	customer: {
+		name: Joi.string().required(),
+		phoneNumber: Joi.string().required().messages({ 'any.required': `"Phone number" is a required.` }),
+		address: Joi.string().required()
+	},
 	quantity: Joi.number().required()
 });
 
 const clientSchema = Joi.object({
 	name: Joi.string().required(),
-	phoneNumber: Joi.string().required(),
+	phoneNumber: Joi.string().required().messages({ 'any.required': `Phone number is required.` }),
 	address: Joi.string().required()
 });
 

@@ -1,15 +1,14 @@
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
-export interface IOrder {
-	product: string;
-	name: string;
-	phoneNumber: string;
-	address: string;
-	quantity: Number;
-	orderId: String;
-}
-
-export interface IOrderDocument extends IOrder, Document {
-	createdAt: Date;
-	updatedAt: Date;
+export interface IOrder extends Document {
+	product: Types.ObjectId;
+	customer: {
+		name: string;
+		phoneNumber: string;
+		address: string;
+	};
+	quantity: number;
+	amount: number;
+	status: 'received' | 'delivered';
+	paymentStatus: 'pending' | 'received';
 }

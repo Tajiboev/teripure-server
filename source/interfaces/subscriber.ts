@@ -1,11 +1,6 @@
 import { Document } from 'mongoose';
 
-export interface ISubscriber {
+export interface ISubscriber extends Document {
 	email: string;
 	isActive: boolean;
-}
-
-export interface ISubscriberDocument extends ISubscriber, Document {
-	createdAt: Date;
-	updatedAt: Date;
 }

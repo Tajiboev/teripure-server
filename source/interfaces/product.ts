@@ -1,13 +1,8 @@
 import { Document } from 'mongoose';
 
-export interface IProduct {
+export interface IProduct extends Document {
 	name: string;
-	price: string;
+	price: number;
 	description: string;
 	slug: string;
-}
-
-export interface IProductDocument extends IProduct, Document {
-	createdAt: Date;
-	updatedAt: Date;
 }

@@ -1,6 +1,7 @@
 import { Schema } from 'mongoose';
+import { IReview } from '../interfaces/review';
 
-const reviewSchema: Schema = new Schema(
+const reviewSchema = new Schema<IReview>(
 	{
 		author: {
 			type: String,

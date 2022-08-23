@@ -1,5 +1,5 @@
 import { model } from 'mongoose';
-import { IProductDocument } from '../interfaces/product';
+import { IProduct } from '../interfaces/product';
 import productSchema from '../schemas/productSchema';
 
-export default model<IProductDocument>('Product', productSchema);
+export default model<IProduct>('Product', productSchema);

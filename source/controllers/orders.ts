@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import crypto from 'crypto';
+import createHttpError from 'http-errors';
+import { IOrder } from '../interfaces/order';
 import Order from '../models/orderModel';
+import Product from '../models/productModel';
 
 const listOrders = (req: Request, res: Response, next: NextFunction) => {
 	Order.find()
@@ -12,10 +14,13 @@ const listOrders = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const createOrder = async (req: Request, res: Response, next: NextFunction) => {
-	const { name, phoneNumber, address, quantity, product } = req.body;
-	const orderId = crypto.randomBytes(6).toString('hex').substring(0, 6).toUpperCase();
+	const body = req.body as IOrder;
+	const { customer, product, quantity } = body;
 
-	Order.create({ name, phoneNumber, address, quantity, product, orderId })
+	const productData = await Product.findById({ _id: product });
+	if (!productData) throw new createHttpError.BadRequest('There is no such product');
+
+	Order.create({ customer, product, quantity, amount: quantity * productData.price })
 		.then((order) => {
 			res.status(201).json(order);
 		})
@@ -24,7 +29,7 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
 
 const orderInfo = (req: Request, res: Response, next: NextFunction) => {
 	const orderId = req.params.orderId;
-	Order.findOne({ orderId })
+	Order.findById(orderId)
 		.then((order) => {
 			if (order) {
 				res.status(200).json(order);
@@ -35,51 +40,32 @@ const orderInfo = (req: Request, res: Response, next: NextFunction) => {
 		.catch(next);
 };
 
-// const oneProject = (req: Request, res: Response, next: NextFunction) => {
-// 	const { id } = req.params;
-// 	Project.findById(id)
-// 		.exec()
-// 		.then((project) => {
-// 			if (!project) throw new createHttpError.NotFound(`project with the id ${id} not found`);
-// 			res.status(200).json({ data: project });
-// 		})
-// 		.catch(next);
-// };
+const deleteOrder = async (req: Request, res: Response, next: NextFunction) => {
+	const orderId = req.params.orderId;
+	Order.findByIdAndRemove(orderId)
+		.exec()
+		.then((result) => {
+			if (!result) throw new createHttpError.NotFound(`Order with the id ${orderId} not found`);
+			res.status(200).json(result);
+		})
+		.catch(next);
+};
 
-// const deleteProject = async (req: Request, res: Response, next: NextFunction) => {
-// 	try {
-// 		const { id } = req.params;
-// 		const { uid } = res.locals;
+const updateOrder = async (req: Request, res: Response, next: NextFunction) => {
+	try {
+		const updates = req.body;
+		const { orderId } = req.params;
 
-// 		const project = await Project.findById(id).exec();
-// 		if (!project) throw new createHttpError.NotFound(`project with the id ${id} not found`);
+		const order = await Order.findById(orderId).exec();
+		if (!order) throw new createHttpError.NotFound(`order with the id ${orderId} not found`);
 
-// 		if (project.author != uid) throw new createHttpError.Unauthorized('You cannot delete this');
+		Object.assign(order, updates);
+		const updatedOrder = await order.save();
 
-// 		await project.remove();
+		res.status(200).json(updatedOrder);
+	} catch (e) {
+		next(e);
+	}
+};
 
-// 		res.status(200).json({ message: `Project ${project._id} has been deleted` });
-// 	} catch (e) {
-// 		next(e);
-// 	}
-// };
-
-// const updateProject = async (req: Request, res: Response, next: NextFunction) => {
-// 	try {
-// 		const updates = req.body;
-// 		const { id } = req.params;
-// 		const { uid } = res.locals;
-
-// 		const project = await Project.findById(id).exec();
-// 		if (!project) throw new createHttpError.NotFound(`project with the id ${id} not found`);
-// 		if (project.author != uid) throw new createHttpError.Unauthorized('You cannot delete this');
-
-// 		const result = await project.updateOne(updates).exec();
-
-// 		res.status(200).json({ data: result });
-// 	} catch (e) {
-// 		next(e);
-// 	}
-// };
-
-export { createOrder, listOrders, orderInfo };
+export { createOrder, listOrders, orderInfo, deleteOrder, updateOrder };

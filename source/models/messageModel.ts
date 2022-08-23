@@ -1,5 +1,5 @@
 import { model } from 'mongoose';
-import { IMessageDocument } from '../interfaces/message';
+import { IMessage } from '../interfaces/message';
 import messageSchema from '../schemas/messageSchema';
 
-export default model<IMessageDocument>('Message', messageSchema);
+export default model<IMessage>('Message', messageSchema);

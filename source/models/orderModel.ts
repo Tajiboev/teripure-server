@@ -1,5 +1,5 @@
 import { model } from 'mongoose';
-import { IOrderDocument } from '../interfaces/order';
+import { IOrder } from '../interfaces/order';
 import orderSchema from '../schemas/orderSchema';
 
-export default model<IOrderDocument>('Order', orderSchema);
+export default model<IOrder>('Order', orderSchema);

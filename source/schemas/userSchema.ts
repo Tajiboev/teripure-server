@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
 import { Schema } from 'mongoose';
-import { IUserDocument } from '../interfaces/user';
+import { IUser } from '../interfaces/user';
 
-const userSchema: Schema = new Schema(
+const userSchema = new Schema<IUser>(
 	{
 		email: {
 			type: String,
@@ -30,7 +30,7 @@ const userSchema: Schema = new Schema(
 );
 
 userSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> {
-	const user = this as IUserDocument;
+	const user = this as IUser;
 	return bcrypt.compare(candidatePassword, user.password).catch((e) => false);
 };
 

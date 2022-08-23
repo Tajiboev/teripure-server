@@ -1,8 +1,7 @@
-import { Schema, HookNextFunction } from 'mongoose';
-import slugify from 'slugify';
-import { IProductDocument } from '../interfaces/product';
+import { Schema } from 'mongoose';
+import { IProduct } from '../interfaces/product';
 
-const productSchema: Schema = new Schema(
+const productSchema = new Schema<IProduct>(
 	{
 		price: { type: Number, required: true },
 		name: { type: String, required: true },
