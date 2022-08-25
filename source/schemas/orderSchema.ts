@@ -12,8 +12,8 @@ const orderSchema = new Schema<IOrder>(
 		},
 		quantity: { type: Number, required: true },
 		amount: { type: Number, required: true },
-		status: { type: String, required: true, default: 'received' },
-		paymentStatus: { type: String, required: true, default: 'pending' }
+		status: { type: String, required: true, default: 'Заказ получен' },
+		paymentStatus: { type: String, required: true, default: 'не оплачено' }
 	},
 	{ strictQuery: true, timestamps: true }
 );
