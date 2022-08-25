@@ -6,6 +6,7 @@ import Product from '../models/productModel';
 
 const listOrders = (req: Request, res: Response, next: NextFunction) => {
 	Order.find()
+		.populate('product')
 		.exec()
 		.then((result) => {
 			res.status(200).json({ data: result });
@@ -30,6 +31,7 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
 const orderInfo = (req: Request, res: Response, next: NextFunction) => {
 	const orderId = req.params.orderId;
 	Order.findById(orderId)
+		.populate('product')
 		.then((order) => {
 			if (order) {
 				res.status(200).json(order);
