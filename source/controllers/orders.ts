@@ -17,11 +17,12 @@ const listOrders = (req: Request, res: Response, next: NextFunction) => {
 const createOrder = async (req: Request, res: Response, next: NextFunction) => {
 	const body = req.body as IOrder;
 	const { customer, product, quantity } = body;
+	const _id = Math.floor(100000 + Math.random() * 900000);
 
 	const productData = await Product.findById({ _id: product });
 	if (!productData) throw new createHttpError.BadRequest('There is no such product');
 
-	Order.create({ customer, product, quantity, amount: quantity * productData.price })
+	Order.create({ _id, customer, product, quantity, amount: quantity * productData.price })
 		.then((order) => {
 			res.status(201).json(order);
 		})
