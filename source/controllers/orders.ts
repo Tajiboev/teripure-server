@@ -48,7 +48,7 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
 const orderInfo = (req: Request, res: Response, next: NextFunction) => {
 	const orderId = req.params.orderId;
 	Order.findById(orderId)
-		.populate('product')
+		.populate('product promoCode')
 		.then((order) => {
 			if (order) {
 				res.status(200).json(order);
