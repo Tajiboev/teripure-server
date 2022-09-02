@@ -6,10 +6,8 @@ const notFound = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const errorHandler = async (error: HttpError, req: Request, res: Response, next: NextFunction) => {
-	console.error('👉', error, '\n');
 	res.status(error.statusCode || 500).json({
 		error: {
-			statusCode: error.statusCode,
 			message: error.message
 		}
 	});

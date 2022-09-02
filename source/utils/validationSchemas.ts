@@ -20,6 +20,7 @@ const productSchema = Joi.object({
 
 const orderSchema = Joi.object({
 	product: Joi.string().required(),
+	promoCode: Joi.string(),
 	customer: {
 		name: Joi.string().required(),
 		phoneNumber: Joi.string().required().messages({ 'any.required': `"Phone number" is a required.` }),
@@ -51,6 +52,11 @@ const messageSchema = Joi.object({
 	text: Joi.string().required()
 });
 
+const promoCodeSchema = Joi.object({
+	code: Joi.string().required(),
+	discount: Joi.number().min(0.01).max(1).required()
+});
+
 export {
 	loginSchema,
 	productSchema,
@@ -59,5 +65,6 @@ export {
 	signupSchema,
 	subscribeSchema,
 	reviewSchema,
-	messageSchema
+	messageSchema,
+	promoCodeSchema
 };

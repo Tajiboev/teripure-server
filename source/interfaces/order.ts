@@ -2,6 +2,7 @@ import { Document, Types } from 'mongoose';
 
 export interface IOrder extends Document {
 	product: Types.ObjectId;
+	promoCode?: Types.ObjectId;
 	customer: {
 		name: string;
 		phoneNumber: string;

@@ -3,28 +3,44 @@ import createHttpError from 'http-errors';
 import { IOrder } from '../interfaces/order';
 import Order from '../models/orderModel';
 import Product from '../models/productModel';
+import PromoCode from '../models/promoCodeModel';
 
 const listOrders = (req: Request, res: Response, next: NextFunction) => {
 	Order.find()
-		.populate('product')
+		.populate('product promoCode')
 		.exec()
 		.then((result) => {
-			res.status(200).json({ data: result });
+			res.status(200).json(result);
 		})
 		.catch(next);
 };
 
 const createOrder = async (req: Request, res: Response, next: NextFunction) => {
-	const body = req.body as IOrder;
-	const { customer, product, quantity } = body;
+	const { customer, product, quantity, promoCode } = req.body;
 	const _id = Math.floor(100000 + Math.random() * 900000);
 
-	const productData = await Product.findById({ _id: product });
+	const productData = await Product.findById(product);
 	if (!productData) throw new createHttpError.BadRequest('There is no such product');
 
-	Order.create({ _id, customer, product, quantity, amount: quantity * productData.price })
-		.then((order) => {
-			res.status(201).json(order);
+	let order = {
+		_id,
+		customer,
+		product,
+		quantity,
+		amount: quantity * productData.price
+	} as IOrder;
+
+	if (promoCode) {
+		const promoCodeData = await PromoCode.findOne({ code: promoCode });
+		if (promoCodeData) {
+			order.amount = order.amount * (1 - promoCodeData.discount);
+			order.promoCode = promoCodeData._id;
+		}
+	}
+
+	Order.create(order)
+		.then((result) => {
+			res.status(201).json(result);
 		})
 		.catch(next);
 };
