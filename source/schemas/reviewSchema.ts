@@ -18,6 +18,11 @@ const reviewSchema = new Schema<IReview>(
 		rating: {
 			type: Number,
 			required: true
+		},
+		status: {
+			type: String,
+			required: true,
+			default: 'pending'
 		}
 	},
 	{ strictQuery: true, timestamps: true }

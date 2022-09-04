@@ -46,6 +46,14 @@ const reviewSchema = Joi.object({
 	rating: Joi.number().max(5).min(1).required()
 });
 
+const reviewUpdateSchema = Joi.object({
+	status: Joi.string().required(),
+	_id: Joi.string().required()
+});
+const reviewDeleteSchema = Joi.object({
+	_id: Joi.string().required()
+});
+
 const messageSchema = Joi.object({
 	name: Joi.string().required(),
 	phoneNumber: Joi.string().required(),
@@ -65,6 +73,8 @@ export {
 	signupSchema,
 	subscribeSchema,
 	reviewSchema,
+	reviewUpdateSchema,
+	reviewDeleteSchema,
 	messageSchema,
 	promoCodeSchema
 };
