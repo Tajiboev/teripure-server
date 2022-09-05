@@ -25,7 +25,7 @@ const updateReview = async (req: Request, res: Response, next: NextFunction) => 
 	const { _id, status } = req.body;
 
 	try {
-		let updated = await Review.findByIdAndUpdate(_id, status);
+		let updated = await Review.findByIdAndUpdate(_id, { status });
 		if (!updated) return next(new createHttpError.NotFound(`Review with the id ${_id} not found`));
 		res.status(200).json(updated);
 	} catch (error) {
@@ -39,6 +39,7 @@ const deleteReview = async (req: Request, res: Response, next: NextFunction) => 
 	Review.findByIdAndDelete(_id)
 		.exec()
 		.then((result) => {
+			if (!result) return next(new createHttpError.NotFound(`Review with the id ${_id} not found`));
 			res.status(200).json(result);
 		})
 		.catch((e) => {

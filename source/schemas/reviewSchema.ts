@@ -22,7 +22,7 @@ const reviewSchema = new Schema<IReview>(
 		status: {
 			type: String,
 			required: true,
-			default: 'pending'
+			default: 'в ожидании'
 		}
 	},
 	{ strictQuery: true, timestamps: true }
