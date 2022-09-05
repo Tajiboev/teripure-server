@@ -12,4 +12,5 @@ export interface IOrder extends Document {
 	amount: number;
 	status: 'received' | 'delivered';
 	paymentStatus: 'pending' | 'received';
+	createdAt: Date;
 }

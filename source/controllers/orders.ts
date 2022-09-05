@@ -4,6 +4,7 @@ import { IOrder } from '../interfaces/order';
 import Order from '../models/orderModel';
 import Product from '../models/productModel';
 import PromoCode from '../models/promoCodeModel';
+import bot from '../bot';
 
 const listOrders = (req: Request, res: Response, next: NextFunction) => {
 	Order.find()
@@ -41,6 +42,15 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
 	Order.create(order)
 		.then((result) => {
 			res.status(201).json(result);
+			let telegramMessage = `Новый заказ (${result.createdAt.toLocaleDateString()})
+
+		Имя: ${result.customer.name}
+		Номер телефона: ${result.customer.phoneNumber}
+		Адрес: ${result.customer.address}
+
+		Номер заказа: ${result._id}`;
+
+			bot.telegram.sendMessage('-713488971', telegramMessage);
 		})
 		.catch(next);
 };

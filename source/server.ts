@@ -4,6 +4,7 @@ import app from './app';
 import log from './logger';
 import { port } from './config';
 import connectDB from './db';
+import bot from './bot';
 
 const server = createServer(app);
 
@@ -17,6 +18,7 @@ async function shutdown() {
 		server.close(() => {
 			log.info('HTTP server closed');
 		});
+		bot.stop('Server shutdown');
 		await mongoose.disconnect();
 		await mongoose.connection.close();
 	} catch (error) {

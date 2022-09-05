@@ -36,7 +36,7 @@ const updateReview = async (req: Request, res: Response, next: NextFunction) => 
 const deleteReview = async (req: Request, res: Response, next: NextFunction) => {
 	const { _id } = req.body;
 
-	Review.findByIdAndDelete(_id)
+	Review.findByIdAndDelete({ _id })
 		.exec()
 		.then((result) => {
 			if (!result) return next(new createHttpError.NotFound(`Review with the id ${_id} not found`));
