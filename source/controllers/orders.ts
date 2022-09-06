@@ -50,7 +50,7 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
 
 		Номер заказа: ${result._id}`;
 
-			bot.telegram.sendMessage('-713488971', telegramMessage);
+			bot.telegram.sendMessage('-1001783472432', telegramMessage);
 		})
 		.catch(next);
 };
