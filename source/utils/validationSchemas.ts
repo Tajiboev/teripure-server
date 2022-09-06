@@ -20,7 +20,7 @@ const productSchema = Joi.object({
 
 const orderSchema = Joi.object({
 	product: Joi.string().required(),
-	promoCode: Joi.string(),
+	promoCode: Joi.string().allow(''),
 	customer: {
 		name: Joi.string().required(),
 		phoneNumber: Joi.string().required().messages({ 'any.required': `"Phone number" is a required.` }),
