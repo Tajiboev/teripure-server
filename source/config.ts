@@ -1,7 +1,7 @@
 const MONGO_USERNAME = process.env.MONGO_USERNAME;
 const MONGO_PASSWORD = process.env.MONGO_PASSWORD;
 const SECRET_TOKEN = process.env.SECRET_TOKEN;
-const BOT_TOKEN = process.env.BOT_TOKEN;
+const BOT_TOKEN = process.env.BOT_TOKEN || '';
 const port = process.env.PORT || 5000;
 const secret_token = process.env.SECRET_TOKEN;
 const secret_key = process.env.CLICK_SECRET_KEY || '';
