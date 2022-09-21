@@ -1,3 +1,4 @@
+import { boolean } from 'joi';
 import { Schema } from 'mongoose';
 import { IReview } from '../interfaces/review';
 
@@ -19,10 +20,10 @@ const reviewSchema = new Schema<IReview>(
 			type: Number,
 			required: true
 		},
-		status: {
-			type: String,
+		published: {
+			type: Boolean,
 			required: true,
-			default: 'в ожидании'
+			default: false
 		}
 	},
 	{ strictQuery: true, timestamps: true }

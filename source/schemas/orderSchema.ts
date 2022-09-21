@@ -3,18 +3,14 @@ import { IOrder } from '../interfaces/order';
 
 const orderSchema = new Schema<IOrder>(
 	{
-		_id: { type: Number, required: true },
+		orderNumber: { type: Number, required: true, unique: true },
 		product: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
+		customer: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 		promoCode: { type: Schema.Types.ObjectId, ref: 'PromoCode' },
-		customer: {
-			name: { type: String, required: true },
-			phoneNumber: { type: String, required: [true, 'Phone number is required'] },
-			address: { type: String, required: true }
-		},
 		quantity: { type: Number, required: true },
 		amount: { type: Number, required: true },
-		orderStatus: { type: String, required: true, default: 'Заказ оформлен' },
-		paymentStatus: { type: String, required: true, default: 'Не оплачено' }
+		paymentReceived: { type: Boolean, required: true, default: false },
+		merchant_prepare_id: { type: String, default: null }
 	},
 	{ strictQuery: true, timestamps: true }
 );

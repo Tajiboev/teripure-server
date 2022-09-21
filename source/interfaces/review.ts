@@ -5,5 +5,5 @@ export interface IReview extends Document {
 	text: string;
 	phoneNumber: string;
 	rating: number;
-	status: string;
+	pubished: boolean;
 }
