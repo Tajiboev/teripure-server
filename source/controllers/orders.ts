@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import createHttpError from 'http-errors';
-import { IOrder } from '../interfaces/order';
 import Order from '../models/orderModel';
 import Product from '../models/productModel';
 import Customer from '../models/customerModel';

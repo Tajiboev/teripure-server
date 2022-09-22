@@ -1,13 +1,15 @@
 import express from 'express';
 import { createInvoice, prepare, complete } from '../controllers/payment';
 
-const router = express.Router();
-
+import validateBody from '../middleware/validateBody';
+import { createInvoiceSchema } from '../utils/validationSchemas';
 import methodError from '../utils/methodError';
+
+const router = express.Router();
 
 router
 	.route('/click/createInvoice')
-	.post(createInvoice)
+	.post(validateBody(createInvoiceSchema), createInvoice)
 	.all(methodError({ allowed: ['POST'] }));
 
 router

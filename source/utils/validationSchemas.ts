@@ -18,21 +18,17 @@ const productSchema = Joi.object({
 	description: Joi.string().required()
 });
 
+const clientSchema = Joi.object({
+	name: Joi.string().required(),
+	phoneNumber: Joi.string().required(),
+	address: Joi.string().required()
+});
+
 const orderSchema = Joi.object({
 	product: Joi.string().required(),
 	promoCode: Joi.string().allow(''),
-	customer: {
-		name: Joi.string().required(),
-		phoneNumber: Joi.string().required().messages({ 'any.required': `"Phone number" is a required.` }),
-		address: Joi.string().required()
-	},
+	customer: clientSchema.required(),
 	quantity: Joi.number().required()
-});
-
-const clientSchema = Joi.object({
-	name: Joi.string().required(),
-	phoneNumber: Joi.string().required().messages({ 'any.required': `Phone number is required.` }),
-	address: Joi.string().required()
 });
 
 const subscribeSchema = Joi.object({
@@ -65,7 +61,14 @@ const promoCodeSchema = Joi.object({
 	discount: Joi.number().min(0.01).max(1).required()
 });
 
+const createInvoiceSchema = Joi.object({
+	amount: Joi.number().required(),
+	phone_number: Joi.string().required(),
+	merchant_trans_id: Joi.string().required()
+});
+
 export {
+	createInvoiceSchema,
 	loginSchema,
 	productSchema,
 	orderSchema,

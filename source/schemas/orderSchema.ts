@@ -5,7 +5,7 @@ const orderSchema = new Schema<IOrder>(
 	{
 		orderNumber: { type: Number, required: true, unique: true },
 		product: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
-		customer: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+		customer: { type: Schema.Types.ObjectId, ref: 'Customer', required: true },
 		promoCode: { type: Schema.Types.ObjectId, ref: 'PromoCode' },
 		quantity: { type: Number, required: true },
 		amount: { type: Number, required: true },

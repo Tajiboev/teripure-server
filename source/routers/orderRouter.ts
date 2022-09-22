@@ -11,7 +11,7 @@ router
 	.route('/')
 	.get(listOrders)
 	.post(validateBody(orderSchema), createOrder)
-	.all(methodError({ allowed: ['POST'] }));
+	.all(methodError({ allowed: ['POST', 'GET'] }));
 
 router
 	.route('/:orderId')
