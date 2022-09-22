@@ -3,6 +3,7 @@ import Customer from '../models/customerModel';
 
 const listCustomers = (req: Request, res: Response, next: NextFunction) => {
 	Customer.find()
+		.populate('orders')
 		.exec()
 		.then((result) => {
 			res.status(200).json(result);

@@ -3,20 +3,19 @@ import { createInvoice, prepare, complete } from '../controllers/payment';
 
 const router = express.Router();
 
-// import validateBody from '../middleware/validateBody';
 import methodError from '../utils/methodError';
 
 router
-	.route('/createInvoice')
+	.route('/click/createInvoice')
 	.post(createInvoice)
 	.all(methodError({ allowed: ['POST'] }));
 
 router
-	.route('/prepare')
+	.route('/click/prepare')
 	.post(prepare)
 	.all(methodError({ allowed: ['POST'] }));
 router
-	.route('/complete')
+	.route('/click/complete')
 	.post(complete)
 	.all(methodError({ allowed: ['POST'] }));
 

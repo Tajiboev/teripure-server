@@ -4,13 +4,14 @@ import app from './app';
 import log from './logger';
 import { port } from './config';
 import connectDB from './db';
-import bot from './bot';
+import { launchBot, stopBot } from './bot';
 
 const server = createServer(app);
 
 server.listen(port, async () => {
 	log.info(`Server listening on port ${port}`);
 	connectDB();
+	launchBot();
 });
 
 async function shutdown() {
@@ -18,7 +19,7 @@ async function shutdown() {
 		server.close(() => {
 			log.info('HTTP server closed');
 		});
-		bot.stop('Server shutdown');
+		stopBot();
 		await mongoose.disconnect();
 		await mongoose.connection.close();
 	} catch (error) {

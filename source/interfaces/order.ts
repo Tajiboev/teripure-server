@@ -7,6 +7,6 @@ export interface IOrder extends Document {
 	promoCode?: Types.ObjectId;
 	quantity: number;
 	amount: number;
-	paymentReceived: boolean;
-	merchant_prepare_id?: string;
+	isPaid: boolean;
+	merchant_prepare_id?: number;
 }

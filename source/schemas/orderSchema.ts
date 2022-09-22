@@ -9,7 +9,7 @@ const orderSchema = new Schema<IOrder>(
 		promoCode: { type: Schema.Types.ObjectId, ref: 'PromoCode' },
 		quantity: { type: Number, required: true },
 		amount: { type: Number, required: true },
-		paymentReceived: { type: Boolean, required: true, default: false },
+		isPaid: { type: Boolean, required: true, default: false },
 		merchant_prepare_id: { type: String, default: null }
 	},
 	{ strictQuery: true, timestamps: true }
