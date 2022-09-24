@@ -20,7 +20,7 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
 	const { customer, product, quantity, promoCode } = req.body;
 
 	const productData = await Product.findById(product);
-	if (!productData) throw new createHttpError.BadRequest('There is no such product');
+	if (!productData) return next(createHttpError(400));
 
 	let user = await Customer.findOne({ phoneNumber: customer.phoneNumber }).exec();
 	if (!user) {

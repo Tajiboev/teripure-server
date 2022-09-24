@@ -1,6 +1,6 @@
 import { Telegraf } from 'telegraf';
-import { bot_token } from './config';
-import log from './logger';
+import { bot_token, chat_id } from './config';
+import log from './utils/logger';
 
 const bot = new Telegraf(bot_token);
 
@@ -14,17 +14,21 @@ const sendOrderInfo = (name: string, phoneNumber: string, address: string, order
 Номер заказа: ${orderNumber}
 `;
 
-	bot.telegram.sendMessage('-1001783472432', telegramMessage);
+	bot.telegram.sendMessage(chat_id, telegramMessage);
 };
 
-const launchBot = async () => {
-	await bot.launch();
-	log.info('Telegram notification bot launched');
+const startBot = async () => {
+	try {
+		await bot.launch();
+		log.info('Telegram notification bot launched');
+	} catch (error) {
+		log.error('Telegram bot failed to launch: ', error);
+	}
 };
 
-const stopBot = () => {
+const stopBot = async () => {
 	bot.stop('Server shutdown');
 	log.info('Telegram notification bot stopped');
 };
 
-export { launchBot, stopBot, sendOrderInfo };
+export { startBot, stopBot, sendOrderInfo };
