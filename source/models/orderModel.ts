@@ -17,7 +17,7 @@ const orderSchema: Schema = new Schema(
 	{
 		orderNumber: { type: Number, required: true, unique: true },
 		product: { type: Schema.Types.ObjectId, ref: 'product', required: true },
-		customer: { type: Schema.Types.ObjectId, ref: 'pustomer', required: true },
+		customer: { type: Schema.Types.ObjectId, ref: 'customer', required: true },
 		promoCode: { type: Schema.Types.ObjectId, ref: 'promocode' },
 		quantity: { type: Number, required: true },
 		amount: { type: Number, required: true },
