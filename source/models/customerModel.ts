@@ -25,7 +25,7 @@ const customerSchema: Schema = new Schema(
 			type: String,
 			required: true
 		},
-		orders: [{ type: Schema.Types.ObjectId, ref: 'Order' }],
+		orders: [{ type: Schema.Types.ObjectId, ref: 'order' }],
 		confirmationCode: { type: Number }
 	},
 	{ timestamps: true, versionKey: false }

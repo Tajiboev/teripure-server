@@ -16,9 +16,9 @@ export interface IOrderModel extends IOrder, Document {}
 const orderSchema: Schema = new Schema(
 	{
 		orderNumber: { type: Number, required: true, unique: true },
-		product: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
-		customer: { type: Schema.Types.ObjectId, ref: 'Customer', required: true },
-		promoCode: { type: Schema.Types.ObjectId, ref: 'PromoCode' },
+		product: { type: Schema.Types.ObjectId, ref: 'product', required: true },
+		customer: { type: Schema.Types.ObjectId, ref: 'pustomer', required: true },
+		promoCode: { type: Schema.Types.ObjectId, ref: 'promocode' },
 		quantity: { type: Number, required: true },
 		amount: { type: Number, required: true },
 		isPaid: { type: Boolean, required: true, default: false },
