@@ -65,8 +65,9 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
 
 const orderInfo = (req: Request, res: Response, next: NextFunction) => {
 	const orderId = req.params.orderId;
-	Order.findById(orderId)
+	Order.findOne({ _id: orderId })
 		.populate('product promoCode customer')
+		.exec()
 		.then((order) => {
 			if (order) {
 				res.status(200).json(order);
@@ -79,7 +80,7 @@ const orderInfo = (req: Request, res: Response, next: NextFunction) => {
 
 const deleteOrder = async (req: Request, res: Response, next: NextFunction) => {
 	const orderId = req.params.orderId;
-	Order.findByIdAndRemove(orderId)
+	Order.findOneAndDelete({ _id: orderId })
 		.exec()
 		.then((result) => {
 			if (!result) throw new createHttpError.NotFound(`Order with the id ${orderId} not found`);
@@ -93,7 +94,7 @@ const updateOrder = async (req: Request, res: Response, next: NextFunction) => {
 		const updates = req.body;
 		const { orderId } = req.params;
 
-		const order = await Order.findById(orderId).exec();
+		const order = await Order.findOne({ _id: orderId }).exec();
 		if (!order) throw new createHttpError.NotFound(`order with the id ${orderId} not found`);
 
 		Object.assign(order, updates);
