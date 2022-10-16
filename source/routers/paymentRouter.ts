@@ -1,5 +1,5 @@
 import express from 'express';
-import { createInvoice, prepare, complete } from '../controllers/payment';
+import { createInvoice, prepare, complete, payme } from '../controllers/payment';
 
 import validateBody from '../middleware/validateBody';
 import { createInvoiceSchema } from '../utils/validationSchemas';
@@ -19,6 +19,11 @@ router
 router
 	.route('/click/complete')
 	.post(complete)
+	.all(methodError({ allowed: ['POST'] }));
+
+router
+	.route('/payme')
+	.post(payme)
 	.all(methodError({ allowed: ['POST'] }));
 
 export default router;
