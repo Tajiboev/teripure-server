@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import createHttpError from 'http-errors';
 import { Schema } from 'joi';
+import ServerError from '../utils/serverError';
 
 const validateBody = (schema: Schema) => {
 	return async (req: Request, res: Response, next: NextFunction) => {
@@ -10,7 +10,7 @@ const validateBody = (schema: Schema) => {
 				if (value) next();
 			})
 			.catch((e) => {
-				next(createHttpError(400, e.message));
+				next(new ServerError(400, e.message));
 			});
 	};
 };
