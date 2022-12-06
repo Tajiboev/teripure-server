@@ -2,15 +2,33 @@ import axios from 'axios';
 import { NextFunction, Request, Response } from 'express';
 import { createAuthHeader } from '../utils/helpers';
 import { service_id } from '../config';
-import Order from '../models/orderModel';
-import Transaction from '../models/paymeTransactionModel';
-import log from '../utils/logger';
+import Order from '../models/order';
 
 interface createInvoiceResponse {
 	error_code: string;
 	error_note: string;
 	invoice_id: number;
 }
+
+// const session = await mongoose.startSession();
+
+// try {
+// 	session.startTransaction();
+
+// 	const customer = await Customer.findOne({ phoneNumber });
+
+// 	const [order] = await Order.create([{ customer, title }], { session });
+// 	await User.findByIdAndUpdate(author, { $push: { posts: order._id } }, { session });
+
+// 	await session.commitTransaction();
+
+// 	res.status(200).json(order);
+// } catch (error) {
+// 	await session.abortTransaction();
+// 	return next(new ServerError(400, 'Bad request'));
+// } finally {
+// 	session.endSession();
+// }
 
 const createInvoice = async (req: Request, res: Response, next: NextFunction) => {
 	const { amount, phone_number, merchant_trans_id } = req.body;
@@ -145,204 +163,204 @@ const complete = async (req: Request, res: Response, next: NextFunction) => {
 	}
 };
 
-//payme
+// //payme
 
-const payme = async (req: Request, res: Response, next: NextFunction) => {
-	const { id: request_id, method, params } = req.body;
+// const payme = async (req: Request, res: Response, next: NextFunction) => {
+// 	const { id: request_id, method, params } = req.body;
 
-	if (method === 'CheckPerformTransaction') {
-		try {
-			const { account, amount } = params;
+// 	if (method === 'CheckPerformTransaction') {
+// 		try {
+// 			const { account, amount } = params;
 
-			const order = await Order.findOne({ _id: account.order_id }).exec();
-			if (!order) {
-				res.status(200).json({
-					jsonrpc: '2.0',
-					id: request_id,
-					error: {
-						code: '-31050'
-					}
-				});
-				return;
-			}
-			if (amount !== order.amount) {
-				res.status(200).json({
-					jsonrpc: '2.0',
-					id: request_id,
-					error: {
-						code: '-31001'
-					}
-				});
-				return;
-			}
+// 			const order = await Order.findOne({ _id: account.order_id }).exec();
+// 			if (!order) {
+// 				res.status(200).json({
+// 					jsonrpc: '2.0',
+// 					id: request_id,
+// 					error: {
+// 						code: '-31050'
+// 					}
+// 				});
+// 				return;
+// 			}
+// 			if (amount !== order.amount) {
+// 				res.status(200).json({
+// 					jsonrpc: '2.0',
+// 					id: request_id,
+// 					error: {
+// 						code: '-31001'
+// 					}
+// 				});
+// 				return;
+// 			}
 
-			res.status(200).json({
-				jsonrpc: '2.0',
-				id: request_id,
-				result: {
-					allow: true
-				}
-			});
-		} catch (error) {
-			return next(error);
-		}
-	}
+// 			res.status(200).json({
+// 				jsonrpc: '2.0',
+// 				id: request_id,
+// 				result: {
+// 					allow: true
+// 				}
+// 			});
+// 		} catch (error) {
+// 			return next(error);
+// 		}
+// 	}
 
-	if (method === 'CreateTransaction') {
-		try {
-			const { id, account } = params;
+// 	if (method === 'CreateTransaction') {
+// 		try {
+// 			const { id, account } = params;
 
-			const transaction = await Transaction.findOne({ _id: id }).exec();
-			if (!transaction) {
-				let new_transaction = await Transaction.create({
-					_id: id,
-					create_time: Date.now(),
-					state: 1,
-					order: account.order_id
-				});
-				res.status(200).json({
-					jsonrpc: '2.0',
-					id: request_id,
-					result: {
-						create_time: new_transaction.create_time,
-						transaction: new_transaction._id,
-						state: new_transaction.state,
-						receivers: null
-					},
-					error: null
-				});
-				return;
-			}
+// 			const transaction = await Transaction.findOne({ _id: id }).exec();
+// 			if (!transaction) {
+// 				let new_transaction = await Transaction.create({
+// 					_id: id,
+// 					create_time: Date.now(),
+// 					state: 1,
+// 					order: account.order_id
+// 				});
+// 				res.status(200).json({
+// 					jsonrpc: '2.0',
+// 					id: request_id,
+// 					result: {
+// 						create_time: new_transaction.create_time,
+// 						transaction: new_transaction._id,
+// 						state: new_transaction.state,
+// 						receivers: null
+// 					},
+// 					error: null
+// 				});
+// 				return;
+// 			}
 
-			res.status(200).json({
-				jsonrpc: '2.0',
-				id: request_id,
-				result: {
-					create_time: transaction.create_time,
-					transaction: transaction._id,
-					state: transaction.state,
-					receivers: null
-				},
-				error: null
-			});
-		} catch (error) {
-			return next(error);
-		}
-	}
-	if (method === 'PerformTransaction') {
-		try {
-			const { id } = params;
-			const transaction = await Transaction.findOne({ _id: id }).exec();
-			if (!transaction) {
-				res.status(200).json({
-					jsonrpc: '2.0',
-					id: request_id,
-					error: {
-						code: '-31003'
-					}
-				});
-				return;
-			}
+// 			res.status(200).json({
+// 				jsonrpc: '2.0',
+// 				id: request_id,
+// 				result: {
+// 					create_time: transaction.create_time,
+// 					transaction: transaction._id,
+// 					state: transaction.state,
+// 					receivers: null
+// 				},
+// 				error: null
+// 			});
+// 		} catch (error) {
+// 			return next(error);
+// 		}
+// 	}
+// 	if (method === 'PerformTransaction') {
+// 		try {
+// 			const { id } = params;
+// 			const transaction = await Transaction.findOne({ _id: id }).exec();
+// 			if (!transaction) {
+// 				res.status(200).json({
+// 					jsonrpc: '2.0',
+// 					id: request_id,
+// 					error: {
+// 						code: '-31003'
+// 					}
+// 				});
+// 				return;
+// 			}
 
-			if (transaction.state === 2) {
-				res.status(200).json({
-					jsonrpc: '2.0',
-					id: request_id,
-					result: {
-						perform_time: transaction.create_time,
-						transaction: transaction._id,
-						state: transaction.state
-					}
-				});
-				return;
-			}
+// 			if (transaction.state === 2) {
+// 				res.status(200).json({
+// 					jsonrpc: '2.0',
+// 					id: request_id,
+// 					result: {
+// 						perform_time: transaction.create_time,
+// 						transaction: transaction._id,
+// 						state: transaction.state
+// 					}
+// 				});
+// 				return;
+// 			}
 
-			// implement timeout
+// 			// implement timeout
 
-			await Order.findOneAndUpdate({ _id: transaction.order }, { isPad: true }).exec();
+// 			await Order.findOneAndUpdate({ _id: transaction.order }, { isPad: true }).exec();
 
-			let updates = {
-				perform_time: Date.now(),
-				state: 2
-			};
+// 			let updates = {
+// 				perform_time: Date.now(),
+// 				state: 2
+// 			};
 
-			Object.assign(transaction, updates);
-			const updated_transaction = await transaction.save();
+// 			Object.assign(transaction, updates);
+// 			const updated_transaction = await transaction.save();
 
-			res.status(200).json({
-				jsonrpc: '2.0',
-				id: request_id,
-				result: {
-					perform_time: updated_transaction.create_time,
-					transaction: updated_transaction._id,
-					state: updated_transaction.state
-				}
-			});
-		} catch (error) {
-			return next(error);
-		}
-	}
+// 			res.status(200).json({
+// 				jsonrpc: '2.0',
+// 				id: request_id,
+// 				result: {
+// 					perform_time: updated_transaction.create_time,
+// 					transaction: updated_transaction._id,
+// 					state: updated_transaction.state
+// 				}
+// 			});
+// 		} catch (error) {
+// 			return next(error);
+// 		}
+// 	}
 
-	if (method === 'CancelTransaction') {
-		try {
-			const { id } = params;
-			const transaction = await Transaction.findOne({ _id: id }).exec();
-			if (!transaction) {
-				res.status(200).json({
-					jsonrpc: '2.0',
-					id: request_id,
-					error: {
-						code: '-31003'
-					}
-				});
-				return;
-			}
-			if (transaction.state === 2) {
-				res.status(200).json({
-					jsonrpc: '2.0',
-					id: request_id,
-					error: {
-						code: '-31007'
-					}
-				});
-			}
-		} catch (error) {
-			return next(error);
-		}
-	}
+// 	if (method === 'CancelTransaction') {
+// 		try {
+// 			const { id } = params;
+// 			const transaction = await Transaction.findOne({ _id: id }).exec();
+// 			if (!transaction) {
+// 				res.status(200).json({
+// 					jsonrpc: '2.0',
+// 					id: request_id,
+// 					error: {
+// 						code: '-31003'
+// 					}
+// 				});
+// 				return;
+// 			}
+// 			if (transaction.state === 2) {
+// 				res.status(200).json({
+// 					jsonrpc: '2.0',
+// 					id: request_id,
+// 					error: {
+// 						code: '-31007'
+// 					}
+// 				});
+// 			}
+// 		} catch (error) {
+// 			return next(error);
+// 		}
+// 	}
 
-	if (method === 'CheckTransaction') {
-		try {
-			const { id } = params;
-			const transaction = await Transaction.findOne({ _id: id }).exec();
-			if (!transaction) {
-				res.status(200).json({
-					jsonrpc: '2.0',
-					id: request_id,
-					error: {
-						code: '-31003'
-					}
-				});
-				return;
-			}
+// 	if (method === 'CheckTransaction') {
+// 		try {
+// 			const { id } = params;
+// 			const transaction = await Transaction.findOne({ _id: id }).exec();
+// 			if (!transaction) {
+// 				res.status(200).json({
+// 					jsonrpc: '2.0',
+// 					id: request_id,
+// 					error: {
+// 						code: '-31003'
+// 					}
+// 				});
+// 				return;
+// 			}
 
-			res.status(200).json({
-				jsonrpc: '2.0',
-				id: request_id,
-				result: {
-					create_time: transaction.create_time,
-					perform_time: transaction.create_time,
-					cancel_time: transaction.create_time,
-					transaction: transaction._id,
-					state: transaction.state,
-					reason: transaction.reason
-				},
-				error: null
-			});
-		} catch (error) {
-			return next(error);
-		}
-	}
-};
+// 			res.status(200).json({
+// 				jsonrpc: '2.0',
+// 				id: request_id,
+// 				result: {
+// 					create_time: transaction.create_time,
+// 					perform_time: transaction.create_time,
+// 					cancel_time: transaction.create_time,
+// 					transaction: transaction._id,
+// 					state: transaction.state,
+// 					reason: transaction.reason
+// 				},
+// 				error: null
+// 			});
+// 		} catch (error) {
+// 			return next(error);
+// 		}
+// 	}
+// };
 
-export { prepare, complete, createInvoice, payme };
+export { prepare, complete, createInvoice };

@@ -1,109 +1,73 @@
 import { NextFunction, Request, Response } from 'express';
-import createHttpError from 'http-errors';
-import Order from '../models/orderModel';
-import Product from '../models/productModel';
-import Customer from '../models/customerModel';
-import PromoCode from '../models/promoCodeModel';
-import { sendOrderInfo } from '../bot';
+import Order from '../models/order';
+import Product from '../models/product';
+import Coupon from '../models/coupon';
+import ServerError from '../utils/serverError';
+import { notify } from '../bot';
 
-const listOrders = (req: Request, res: Response, next: NextFunction) => {
-	Order.find()
-		.populate('product promoCode')
-		.exec()
-		.then((result) => {
-			res.status(200).json(result);
-		})
-		.catch(next);
-};
-
-const createOrder = async (req: Request, res: Response, next: NextFunction) => {
-	const { customer, product, quantity, promoCode } = req.body;
-
-	const productData = await Product.findById(product);
-	if (!productData) return next(createHttpError(400));
-
-	let user = await Customer.findOne({ phoneNumber: customer.phoneNumber }).exec();
-	if (!user) {
-		user = await Customer.create(customer);
-	} else {
-		user.address = customer.address;
-		user.name = customer.name;
-		await user.save();
-	}
-
-	const orderNumber = Math.floor(100000 + Math.random() * 900000);
-
-	let order = new Order({
-		product,
-		orderNumber,
-		amount: productData.price * quantity,
-		customer: user._id,
-		quantity
-	});
-
-	user.orders.push(order._id);
-	await user.save();
-
-	if (promoCode) {
-		const promoCodeData = await PromoCode.findOne({ code: promoCode });
-		if (promoCodeData) {
-			order.amount = order.amount * (1 - promoCodeData.discount);
-			order.promoCode = promoCodeData._id;
-		}
-	} else {
-		delete order.promoCode;
-	}
-
-	order
-		.save()
-		.then((result) => {
-			res.status(201).json(result);
-			sendOrderInfo(customer.name, customer.phoneNumber, customer.address, orderNumber);
-		})
-		.catch(next);
-};
-
-const orderInfo = (req: Request, res: Response, next: NextFunction) => {
-	const orderId = req.params.orderId;
-	Order.findOne({ _id: orderId })
-		.populate('product promoCode customer')
-		.exec()
-		.then((order) => {
-			if (order) {
-				res.status(200).json(order);
-			} else {
-				res.status(404).json({ message: 'No order found for provided ID' });
-			}
-		})
-		.catch(next);
-};
-
-const deleteOrder = async (req: Request, res: Response, next: NextFunction) => {
-	const orderId = req.params.orderId;
-	Order.findOneAndDelete({ _id: orderId })
-		.exec()
-		.then((result) => {
-			if (!result) throw new createHttpError.NotFound(`Order with the id ${orderId} not found`);
-			res.status(200).json(result);
-		})
-		.catch(next);
-};
-
-const updateOrder = async (req: Request, res: Response, next: NextFunction) => {
+const list = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const updates = req.body;
-		const { orderId } = req.params;
-
-		const order = await Order.findOne({ _id: orderId }).exec();
-		if (!order) throw new createHttpError.NotFound(`order with the id ${orderId} not found`);
-
-		Object.assign(order, updates);
-		const updatedOrder = await order.save();
-
-		res.status(200).json(updatedOrder);
+		const orders = await Order.find().populate('product coupon').exec();
+		res.status(200).json(orders);
 	} catch (e) {
-		next(e);
+		return next(new ServerError(500, 'Server error.'));
 	}
 };
 
-export { createOrder, listOrders, orderInfo, deleteOrder, updateOrder };
+const create = async (req: Request, res: Response, next: NextFunction) => {
+	const { product, quantity, name, address, phoneNumber, coupon } = req.body;
+
+	// Product check
+	try {
+		const validProduct = await Product.findOne({ _id: product });
+		if (!validProduct) return new ServerError(404, 'Product not found.');
+
+		const validCoupon = await Coupon.findOne({ code: coupon });
+		const discount = validCoupon?.discount || 0;
+
+		let preliminaryOrder: any = {
+			product,
+			quantity,
+			name,
+			phoneNumber,
+			address,
+			amount: validProduct.price * (1 - discount)
+		};
+
+		if (validCoupon) {
+			preliminaryOrder['coupon'] = validCoupon._id;
+		}
+
+		const order = await Order.create(preliminaryOrder);
+		res.status(201).json(order);
+		notify(order.name, order.phoneNumber, order.address, order._id);
+	} catch (e) {
+		return next(new ServerError(500, 'Server error.'));
+	}
+};
+
+const one = async (req: Request, res: Response, next: NextFunction) => {
+	const { _id } = req.params;
+	try {
+		const order = Order.findOne({ _id }).populate('product coupon').exec();
+		if (!order) return next(new ServerError(404, 'Order not found.'));
+
+		res.status(200).json(order);
+	} catch (e) {
+		return next(new ServerError(500, 'Server error.'));
+	}
+};
+
+const removeOne = async (req: Request, res: Response, next: NextFunction) => {
+	const { _id } = req.params;
+	try {
+		const { ok } = await Order.deleteOne({ _id }).exec();
+		if (!ok) return new ServerError(404, `Order with the id ${_id} not found`);
+
+		res.status(200);
+	} catch (e) {
+		return next(new ServerError(500, 'Server error.'));
+	}
+};
+
+export { create, list, one, removeOne };

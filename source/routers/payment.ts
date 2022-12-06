@@ -1,9 +1,9 @@
 import express from 'express';
-import { createInvoice, prepare, complete, payme } from '../controllers/payment';
+import { createInvoice, prepare, complete } from '../controllers/payment';
 
 import validateBody from '../middleware/validateBody';
 import { createInvoiceSchema } from '../utils/validationSchemas';
-import methodError from '../utils/methodError';
+import methodError from '../middleware/methodError';
 
 const router = express.Router();
 
@@ -21,9 +21,9 @@ router
 	.post(complete)
 	.all(methodError({ allowed: ['POST'] }));
 
-router
-	.route('/payme')
-	.post(payme)
-	.all(methodError({ allowed: ['POST'] }));
+// router
+// 	.route('/payme')
+// 	.post(payme)
+// 	.all(methodError({ allowed: ['POST'] }));
 
 export default router;

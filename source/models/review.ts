@@ -1,18 +1,26 @@
+import Joi from 'joi';
 import { model, Document, Schema } from 'mongoose';
 
-export interface IReview extends Document {
-	author: string;
-	text: string;
+export const reviewInput = Joi.object({
+	name: Joi.string().required(),
+	phoneNumber: Joi.string().pattern(new RegExp('^\\+998[0-9]{9}$', 'phone number')).required(),
+	text: Joi.string().required(),
+	rating: Joi.number().max(5).min(1).required()
+});
+
+interface IReview extends Document {
+	name: string;
 	phoneNumber: string;
+	text: string;
 	rating: number;
-	pubished: boolean;
+	isPubished: boolean;
 }
 
-export interface IReviewModel extends IReview, Document {}
+interface IReviewModel extends IReview, Document {}
 
 const reviewSchema: Schema = new Schema(
 	{
-		author: {
+		name: {
 			type: String,
 			required: true
 		},
@@ -28,7 +36,7 @@ const reviewSchema: Schema = new Schema(
 			type: Number,
 			required: true
 		},
-		published: {
+		isPublished: {
 			type: Boolean,
 			required: true,
 			default: false

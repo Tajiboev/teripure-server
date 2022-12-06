@@ -1,12 +1,19 @@
 import { Document, Schema, model } from 'mongoose';
+import Joi from 'joi';
 
-export interface IMessage extends Document {
+export const messageInput = Joi.object({
+	name: Joi.string().required(),
+	phoneNumber: Joi.string().pattern(new RegExp('^\\+998[0-9]{9}$', 'phone number')).required(),
+	text: Joi.string().required()
+});
+
+interface IMessage extends Document {
 	name: string;
 	phoneNumber: string;
 	text: string;
 }
 
-export interface IMessageModel extends IMessage, Document {}
+interface IMessageModel extends IMessage, Document {}
 
 const messageSchema: Schema = new Schema(
 	{
