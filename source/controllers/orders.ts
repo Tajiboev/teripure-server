@@ -31,7 +31,7 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 			name,
 			phoneNumber,
 			address,
-			amount: validProduct.price * (1 - discount)
+			amount: Math.round(validProduct.price * (1 - discount))
 		};
 
 		if (validCoupon) {
@@ -39,8 +39,9 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 		}
 
 		const order = await Order.create(preliminaryOrder);
-		res.status(201).json(order);
-		notify(order.name, order.phoneNumber, order.address, order._id);
+		const populatedOrder = await order.populate('product coupon').execPopulate();
+		res.status(201).json(populatedOrder);
+		notify(populatedOrder);
 	} catch (e) {
 		return next(new ServerError(500, 'Server error.'));
 	}
@@ -49,7 +50,7 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 const one = async (req: Request, res: Response, next: NextFunction) => {
 	const { _id } = req.params;
 	try {
-		const order = Order.findOne({ _id }).populate('product coupon').exec();
+		const order = await Order.findOne({ _id }).populate('product coupon').exec();
 		if (!order) return next(new ServerError(404, 'Order not found.'));
 
 		res.status(200).json(order);
@@ -64,7 +65,7 @@ const removeOne = async (req: Request, res: Response, next: NextFunction) => {
 		const { ok } = await Order.deleteOne({ _id }).exec();
 		if (!ok) return new ServerError(404, `Order with the id ${_id} not found`);
 
-		res.status(200);
+		res.sendStatus(200);
 	} catch (e) {
 		return next(new ServerError(500, 'Server error.'));
 	}

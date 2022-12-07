@@ -25,16 +25,28 @@ const list = async (req: Request, res: Response, next: NextFunction) => {
 	}
 };
 
+const one = async (req: Request, res: Response, next: NextFunction) => {
+	const { _id } = req.params;
+	try {
+		const coupon = await Coupon.findOne({ _id }).exec();
+		if (!coupon) return next(new ServerError(404, 'Coupon not found.'));
+
+		res.status(200).json(coupon);
+	} catch (e) {
+		return next(new ServerError(500, 'Server error.'));
+	}
+};
+
 const removeOne = async (req: Request, res: Response, next: NextFunction) => {
 	const { _id } = req.params;
 	try {
 		const { ok } = await Coupon.deleteOne({ _id }).exec();
 		if (!ok) return next(new ServerError(400, 'Could not delete the coupon'));
 
-		res.status(200);
+		res.sendStatus(200);
 	} catch (e) {
 		return next(new ServerError(500, 'Server error.'));
 	}
 };
 
-export { create, list, removeOne };
+export { create, list, removeOne, one };

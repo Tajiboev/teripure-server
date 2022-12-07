@@ -3,44 +3,22 @@ import { NextFunction, Request, Response } from 'express';
 import { createAuthHeader } from '../utils/helpers';
 import { service_id } from '../config';
 import Order from '../models/order';
-
-interface createInvoiceResponse {
-	error_code: string;
-	error_note: string;
-	invoice_id: number;
-}
-
-// const session = await mongoose.startSession();
-
-// try {
-// 	session.startTransaction();
-
-// 	const customer = await Customer.findOne({ phoneNumber });
-
-// 	const [order] = await Order.create([{ customer, title }], { session });
-// 	await User.findByIdAndUpdate(author, { $push: { posts: order._id } }, { session });
-
-// 	await session.commitTransaction();
-
-// 	res.status(200).json(order);
-// } catch (error) {
-// 	await session.abortTransaction();
-// 	return next(new ServerError(400, 'Bad request'));
-// } finally {
-// 	session.endSession();
-// }
+import ServerError from '../utils/serverError';
 
 const createInvoice = async (req: Request, res: Response, next: NextFunction) => {
-	const { amount, phone_number, merchant_trans_id } = req.body;
-	const header = createAuthHeader();
+	const { order } = req.body;
 	try {
-		const response = await axios.post<createInvoiceResponse>(
+		const validOrder = await Order.findOne({ _id: order }).exec();
+		if (!validOrder) return next(new ServerError(400, 'Bad request.'));
+
+		const header = createAuthHeader();
+		const response = await axios.post(
 			'https://api.click.uz/v2/merchant/invoice/create',
 			{
 				service_id,
-				amount,
-				phone_number,
-				merchant_trans_id
+				amount: validOrder.amount,
+				phone_number: validOrder.phoneNumber,
+				merchant_trans_id: order
 			},
 			{
 				headers: { Auth: header, 'content-type': 'application/json', Accept: 'application/json' }
@@ -55,8 +33,11 @@ const createInvoice = async (req: Request, res: Response, next: NextFunction) =>
 const prepare = async (req: Request, res: Response, next: NextFunction) => {
 	const { click_trans_id, merchant_trans_id, amount } = req.body;
 
+	console.info('Prepare request: ');
+	console.table({ click_trans_id, merchant_trans_id, amount });
+
 	try {
-		const order = await Order.findOne({ _id: merchant_trans_id });
+		const order = await Order.findOne({ _id: merchant_trans_id }).exec();
 
 		if (!order) {
 			res.status(400).json({
@@ -88,13 +69,14 @@ const prepare = async (req: Request, res: Response, next: NextFunction) => {
 			return;
 		}
 
-		const prepareId = Math.floor(100000 + Math.random() * 900000);
-		order.merchant_prepare_id = prepareId;
-		await order.save();
+		const merchant_prepare_id = Math.floor(100000 + Math.random() * 900000);
+		const { ok } = await Order.updateOne({ _id: order._id }, { merchant_prepare_id }).exec();
+		if (!ok) return next(new ServerError(500, 'Server error'));
+
 		res.status(200).json({
 			click_trans_id,
 			merchant_trans_id,
-			merchant_prepare_id: prepareId,
+			merchant_prepare_id,
 			error: 0,
 			error_note: 'Success'
 		});
@@ -106,17 +88,20 @@ const prepare = async (req: Request, res: Response, next: NextFunction) => {
 const complete = async (req: Request, res: Response, next: NextFunction) => {
 	const { click_trans_id, merchant_trans_id, amount } = req.body;
 
+	console.info('Complete request: ');
+	console.table({ click_trans_id, merchant_trans_id, amount });
+
 	try {
-		const order = await Order.findOne({ _id: merchant_trans_id });
+		const order = await Order.findOne({ _id: merchant_trans_id }).exec();
 
 		if (!order) {
 			res.status(400).json({
 				click_trans_id,
 				merchant_trans_id,
 				error: -5,
-				error_note: 'User does not exist'
+				error_note: 'Order does not exist'
 			});
-			return next();
+			return;
 		}
 
 		if (!order.merchant_prepare_id) {
@@ -126,7 +111,7 @@ const complete = async (req: Request, res: Response, next: NextFunction) => {
 				error: -6,
 				error_note: 'Transaction does not exist'
 			});
-			return next();
+			return;
 		}
 
 		if (order.isPaid) {
@@ -136,7 +121,7 @@ const complete = async (req: Request, res: Response, next: NextFunction) => {
 				error: -4,
 				error_note: 'Already paid'
 			});
-			return next();
+			return;
 		}
 
 		if (order.amount !== amount) {
@@ -146,11 +131,11 @@ const complete = async (req: Request, res: Response, next: NextFunction) => {
 				error: -2,
 				error_note: 'Incorrect parameter amount'
 			});
-			return next();
+			return;
 		}
 
-		order.isPaid = true;
-		await order.save();
+		const { ok } = await Order.updateOne({ _id: order._id }, { isPaid: true }).exec();
+		if (!ok) return next(new ServerError(500, 'Server error'));
 
 		res.status(200).json({
 			click_trans_id,

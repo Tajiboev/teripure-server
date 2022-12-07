@@ -1,11 +1,11 @@
 export default class ServerError extends Error {
-	statusCode: number
+	statusCode: number;
 
 	constructor(statusCode: number, message: string) {
-		super(message)
+		super(message);
 
-		this.statusCode = statusCode
+		this.statusCode = statusCode;
 
-		Object.setPrototypeOf(this, ServerError.prototype)
+		Object.setPrototypeOf(this, ServerError.prototype);
 	}
 }

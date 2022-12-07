@@ -1,16 +1,20 @@
 import { Telegraf } from 'telegraf';
 import { bot_token, chat_id } from './config';
+import { IOrder } from './models/order';
 
 const bot = new Telegraf(bot_token);
 
-const notify = (name: string, phoneNumber: string, address: string, _id: string) => {
+const notify = (order: IOrder) => {
 	let telegramMessage = `Новый заказ!
 
-Имя: ${name}
-Номер телефона: ${phoneNumber}
-Адрес: ${address}
+Имя: ${order.name}
+Номер телефона: ${order.phoneNumber}
+Адрес: ${order.address}
 
-ID заказа: ${_id}
+Количество: ${order.quantity}
+Сумма: ${order.amount}
+
+ID заказа: ${order._id}
 `;
 
 	bot.telegram.sendMessage(chat_id, telegramMessage);

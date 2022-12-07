@@ -1,5 +1,5 @@
 import express from 'express';
-import { createInvoice, prepare, complete } from '../controllers/payment';
+import { createInvoice, prepare, complete } from '../controllers/click';
 
 import validateBody from '../middleware/validateBody';
 import { createInvoiceSchema } from '../utils/validationSchemas';

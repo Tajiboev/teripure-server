@@ -11,7 +11,6 @@ router
 	.route('/')
 	.post(validateBody(reviewInput), create)
 	.get(list)
-	.patch(updateOne)
 	.all(methodError({ allowed: ['POST', 'GET'] }));
 
 router

@@ -1,4 +1,4 @@
-import { create, list, removeOne } from '../controllers/coupon';
+import { create, list, one, removeOne } from '../controllers/coupon';
 import express from 'express';
 const router = express.Router();
 
@@ -14,7 +14,8 @@ router
 
 router
 	.route('/:_id')
+	.get(one)
 	.delete(removeOne)
-	.all(methodError({ allowed: ['DETELE'] }));
+	.all(methodError({ allowed: ['GET', 'DETELE'] }));
 
 export default router;

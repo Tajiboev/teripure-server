@@ -14,7 +14,7 @@ router
 	.all(methodError({ allowed: ['POST', 'GET'] }));
 
 router
-	.route('/:orderId')
+	.route('/:_id')
 	.get(one)
 	.delete(removeOne)
 	.all(methodError({ allowed: ['GET', 'DELETE'] }));

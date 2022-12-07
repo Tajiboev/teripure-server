@@ -27,9 +27,9 @@ const updateOne = async (req: Request, res: Response, next: NextFunction) => {
 	const { isPublished } = req.body;
 
 	try {
-		let updated = await Review.findByIdAndUpdate(_id, { isPublished }).exec();
-		if (!updated) return next(new ServerError(404, `Review with the id ${_id} not found`));
-		res.status(200).json(updated);
+		let { ok } = await Review.updateOne({ _id }, { isPublished }).exec();
+		if (!ok) return next(new ServerError(404, `Review with the id ${_id} not found`));
+		res.sendStatus(200);
 	} catch (e) {
 		return next(new ServerError(500, 'Server error.'));
 	}
