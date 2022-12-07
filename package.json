@@ -1,14 +1,13 @@
 {
-	"name": "auth-backend-ts",
+	"name": "teripure-backend-ts",
 	"version": "1.0.0",
-	"description": "Auth handler",
+	"description": "Teripure backend server",
 	"main": "build/server.js",
 	"scripts": {
 		"dev": "nodemon source/server.ts",
-		"start": "node build/server.js",
-		"build": "prettier --write source/ && tsc"
+		"start": "node build/server.js"
 	},
-	"author": "Mukhammdjon.tajiboev@gmail.com",
+	"author": "mukhammdjon.tajiboev@gmail.com",
 	"license": "MIT",
 	"private": true,
 	"devDependencies": {
