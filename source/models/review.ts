@@ -5,7 +5,7 @@ export const reviewInput = Joi.object({
 	name: Joi.string().required(),
 	phoneNumber: Joi.string().pattern(new RegExp('^\\+998[0-9]{9}$')).required(),
 	text: Joi.string().required(),
-	rating: Joi.number().max(5).min(1).required()
+	rating: Joi.number().integer().max(5).min(1).required()
 });
 
 interface IReview extends Document {
