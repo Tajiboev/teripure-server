@@ -7,7 +7,7 @@ export const orderInput = Joi.object({
 	name: Joi.string().required(),
 	phoneNumber: Joi.string().pattern(new RegExp('^\\+998[0-9]{9}$')).required(),
 	address: Joi.string().required(),
-	paymentMethod: Joi.string().valid('cash', 'click').required(),
+	paymentMethod: Joi.string().valid('cash', 'click').optional(),
 	coupon: Joi.string().allow('').optional()
 });
 

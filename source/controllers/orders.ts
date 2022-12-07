@@ -31,7 +31,7 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 			name,
 			phoneNumber,
 			address,
-			amount: Math.round(validProduct.price * (1 - discount))
+			amount: Math.round(quantity * validProduct.price * (1 - discount))
 		};
 
 		if (validCoupon) {
