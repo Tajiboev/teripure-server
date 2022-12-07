@@ -6,7 +6,8 @@
 	"scripts": {
 		"dev": "nodemon source/server.ts",
 		"start": "node build/server.js",
-		"build": "prettier --write source/ && tsc"
+		"build": "prettier --write source/ && tsc",
+		"production": ""
 	},
 	"author": "mukhammdjon.tajiboev@gmail.com",
 	"license": "MIT",
