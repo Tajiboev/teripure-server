@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import Review from '../models/review';
+import Product from '../models/product';
 import ServerError from '../utils/serverError';
 
 const list = async (req: Request, res: Response, next: NextFunction) => {
@@ -12,10 +13,14 @@ const list = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
-	const { name, phoneNumber, text, rating } = req.body;
+	const { product, name, phoneNumber, text, rating } = req.body;
 
 	try {
-		const review = await Review.create({ name, phoneNumber, text, rating });
+		const validProduct = await Product.exists({ _id: product });
+		if (!validProduct) return next(new ServerError(400, 'Bad request.'));
+
+		const review = await Review.create({ product, name, phoneNumber, text, rating });
+
 		res.status(201).json(review);
 	} catch (e) {
 		return next(new ServerError(500, 'Server error'));
