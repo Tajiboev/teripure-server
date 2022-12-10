@@ -19,10 +19,10 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 
 	// Product check
 	try {
-		const validProduct = await Product.findOne({ _id: product });
+		const validProduct = await Product.findOne({ _id: product }).exec();
 		if (!validProduct) return new ServerError(404, 'Product not found.');
 
-		const validCoupon = await Coupon.findOne({ code: coupon });
+		const validCoupon = await Coupon.findOne({ code: coupon }).exec();
 		const discount = validCoupon?.discount || 0;
 
 		let preliminaryOrder: any = {

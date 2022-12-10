@@ -7,7 +7,6 @@ export const orderInput = Joi.object({
 	name: Joi.string().required(),
 	phoneNumber: Joi.string().pattern(new RegExp('^\\+998[0-9]{9}$')).required(),
 	address: Joi.string().required(),
-	paymentMethod: Joi.string().valid('cash', 'click').optional(),
 	coupon: Joi.string().allow('').optional()
 });
 
@@ -20,7 +19,6 @@ export interface IOrder extends Document {
 	amount: number;
 	coupon?: Types.ObjectId;
 	merchant_prepare_id?: number;
-	paymentMethod: 'cash' | 'click';
 	isPaid: boolean;
 	status: 0 | 1 | -1;
 }
@@ -38,7 +36,6 @@ const orderSchema: Schema = new Schema(
 		merchant_prepare_id: { type: Number },
 		coupon: { type: Schema.Types.ObjectId, ref: 'coupon' },
 		isPaid: { type: Boolean, required: true, default: false },
-		paymentMethod: { type: String, enum: ['cash', 'click'], required: true, default: 'click' },
 		status: { type: Number, enum: [-1, 0, 1], required: true, default: 0 }
 	},
 	{ timestamps: true, versionKey: false }
